@@ -4,8 +4,6 @@ import com.example.draganddropphotos.views.ImageDraggableView;
 import com.example.draganddropphotos.views.MyLayout;
 
 import android.os.Bundle;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.view.Menu;
 
@@ -13,13 +11,9 @@ public class MainActivity extends Activity {
 
     private ImageDraggableView imageView;
 	private MyLayout relativeLayout;
-	private AnimatorSet set;
-	private ObjectAnimator scaleXOut;
-	private ObjectAnimator scaleYOut;
-	private ObjectAnimator rotateClockWise;
-	private ObjectAnimator translation;
 	private ImageDraggableView imageView1;
 	private ImageDraggableView imageView2;
+	private ImageDraggableView imageView3;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +36,12 @@ public class MainActivity extends Activity {
         
         relativeLayout.addView(imageView2);
         imageView2.setParentLayout(relativeLayout);
+        
+        imageView3 = new ImageDraggableView(this, null);
+        imageView3.setImageResource(R.drawable.image111);
+        
+        relativeLayout.addView(imageView3);
+        imageView3.setParentLayout(relativeLayout);
 	}
 
 	@Override

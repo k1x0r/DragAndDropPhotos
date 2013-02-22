@@ -10,8 +10,8 @@ private float fX, fY, sX, sY, focalX, focalY;
 private int ptrID1, ptrID2;
 private float mAngle;
 private boolean firstTouch;
-
 private OnRotationGestureListener mListener;
+private boolean isInProgress;
 
 public float getAngle() {
     return mAngle;
@@ -118,6 +118,11 @@ private float angleBetweenLines (float fx1, float fy1, float fx2, float fy2, flo
 
        return findAngleDelta((float)Math.toDegrees(angle1),(float)Math.toDegrees(angle2));
 }
+
+public boolean isInProgress() {
+	return isInProgress;
+}
+
 
 public static interface OnRotationGestureListener {
     public boolean OnRotation(RotationGestureDetector rotationDetector);

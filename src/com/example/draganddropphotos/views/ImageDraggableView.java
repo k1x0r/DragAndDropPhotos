@@ -4,11 +4,8 @@ package com.example.draganddropphotos.views;
 import com.example.draganddropphotos.views.MyLayout.OnInterceptToutchEventListener;
 import com.example.draganddropphotos.views.RotationGestureDetector.OnRotationGestureListener;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
@@ -16,72 +13,92 @@ import android.widget.ImageView;
 
 public class ImageDraggableView extends ImageView implements OnRotationGestureListener{
 
-	private boolean containsDragable;
-	private GestureDetector gestureDetector;
-	private Context context;
 	private float mScaleFactor = 1.f;
-	private float dx;
-	private float dy;
+
 	private ScaleGestureDetector mScaleDetector;
 	private RotationGestureDetector rotationDetector;
 	private float angle = 0;
-	private float oldAngle;
-	private AnimatorSet animSet;
+
 	private MyLayout parentLayout;
 	private MotionEvent parentEvent;
-	private float prevX;
-	private float prevY;
+
+	private Context context;
 	private float imgX;
 	private float imgY;
+	private float dx;
+	private float dy;
+
+	private boolean enableDragging = true;
+
+	private int pointerCount;
+
+	private int prevCount;
 	
 	public ImageDraggableView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.context = context;
 	    mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 	    rotationDetector = new RotationGestureDetector(this);
-	    animSet = new AnimatorSet();
 	    
 	    
 	}
 	
 	@Override
 	protected void onFinishInflate() {
-		// TODO Auto-generated method stub
 		super.onFinishInflate();
-	//	animate().rotationBy(45);
 
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-
-		
 		mScaleDetector.onTouchEvent(parentEvent);
 		rotationDetector.onTouchEvent(parentEvent);
-		if (!mScaleDetector.isInProgress()) {
-		switch (parentEvent.getAction()) {
+		onDragging(parentEvent);
+		return true;
+		
+	}
+	
+	private void onDragging(MotionEvent event) {
+		
+		pointerCount = event.getPointerCount(); 
+		if(prevCount>1 && pointerCount == 1) {
+			imgX = getSizedX(getX());
+			imgY = getSizedY(getY());
+			dx = event.getX();
+			dy = event.getY();
+		}
+		prevCount = pointerCount;
+		
+		if (pointerCount == 1) {
+		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			dx = parentEvent.getX();
-			dy = parentEvent.getY();
+			dx = event.getX();
+			dy = event.getY();
 			break;
 
 		case MotionEvent.ACTION_MOVE:
-				float x = parentEvent.getX();
-				float y = parentEvent.getY();
-		
-				setX(imgX + x - dx);
-				setY(imgY + y - dx);
-				prevX = x;
-				prevY = y;
+				float x = event.getX();
+				float y = event.getY();
+				setX(imgX + x - getSizedX(dx));
+				setY(imgY + y - getSizedY(dy));
 				break;
 		case MotionEvent.ACTION_UP:
-			imgX = getX();
-			imgY = getY();
+			imgX = getSizedX(getX());
+			imgY = getSizedY(getY());
 			break;
 		}
 		}
-		return true;
 		
+		
+	}
+	
+	private float getSizedX(float x) {
+		
+		return x + (mScaleFactor *getWidth() -  getWidth()) / 2;
+	}
+	
+	private float getSizedY(float y) {
+		return y + (mScaleFactor * getHeight() - getHeight()) / 2;
 	}
 	
 
@@ -89,15 +106,6 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
-		private AnimatorSet set;
-		private ObjectAnimator scaleXOut;
-		private ObjectAnimator scaleYOut;
-		private float mOldScale = 1.0f;
-		private float mScaleMultiplier;
-
-		public ScaleListener() {
-	        set = new AnimatorSet();
-		}
 		
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
