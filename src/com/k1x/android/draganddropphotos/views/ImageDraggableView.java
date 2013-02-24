@@ -1,17 +1,18 @@
-package com.example.draganddropphotos.views;
+package com.k1x.android.draganddropphotos.views;
 
 
-import com.example.draganddropphotos.views.MyLayout.OnInterceptToutchEventListener;
-import com.example.draganddropphotos.views.RotationGestureDetector.OnRotationGestureListener;
+import com.k1x.android.draganddropphotos.views.DraggableLayout.OnInterceptToutchEventListener;
+import com.k1x.android.draganddropphotos.views.RotationGestureDetector.OnRotationGestureListener;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.View;
 import android.widget.ImageView;
+import android.view.View.OnLongClickListener;
 
-
-public class ImageDraggableView extends ImageView implements OnRotationGestureListener{
+public class ImageDraggableView extends ImageView implements OnRotationGestureListener, OnLongClickListener {
 
 	private float mScaleFactor = 1.f;
 
@@ -19,43 +20,58 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 	private RotationGestureDetector rotationDetector;
 	private float angle = 0;
 
-	private MyLayout parentLayout;
+	private DraggableLayout parentLayout;
 	private MotionEvent parentEvent;
 
-	private Context context;
 	private float imgX;
 	private float imgY;
 	private float dx;
 	private float dy;
-
-	private boolean enableDragging = true;
-
 	private int pointerCount;
-
 	private int prevCount;
 	
+	private OnInterceptToutchEventListener onInterceptToutchEventListener = new OnInterceptToutchEventListener() {
+		
+		@Override
+		public void onTouchEvent(MotionEvent e) {
+			parentEvent = e;
+		}
+	};
+	
+
 	public ImageDraggableView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context = context;
 	    mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 	    rotationDetector = new RotationGestureDetector(this);
-	    
+	    setOnLongClickListener(this);
 	    
 	}
 	
 	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
-
+	public boolean onLongClick(View arg0) {
+		System.out.println("Long click happened! ");
+		return false;
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		mScaleDetector.onTouchEvent(parentEvent);
-		rotationDetector.onTouchEvent(parentEvent);
-		onDragging(parentEvent);
-		return true;
+		if (checkActiveView(parentEvent)) {
+			mScaleDetector.onTouchEvent(parentEvent);
+			rotationDetector.onTouchEvent(parentEvent);
+			onDragging(parentEvent);
+		}
 		
+		return super.onTouchEvent(e);
+	}
+	
+	private boolean checkActiveView(MotionEvent e) {
+		if (e.getAction() == MotionEvent.ACTION_DOWN && !parentLayout.isDragging()) {
+			parentLayout.setActiveView(this);
+			parentLayout.setDragging(true);
+		} else if (e.getAction() == MotionEvent.ACTION_UP && e.getPointerCount() == 1) {
+			parentLayout.setDragging(false);
+		}
+		return parentLayout.getActiveView() == this;		
 	}
 	
 	private void onDragging(MotionEvent event) {
@@ -131,25 +147,17 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		return true;
 	}
 
-	public MyLayout getParentLayout() {
+	public DraggableLayout getParentLayout() {
 		return parentLayout;
 	}
 
-	public void setParentLayout(MyLayout parentLayout) {
+	public void setParentLayout(DraggableLayout parentLayout) {
 		this.parentLayout = parentLayout;
-		parentLayout.addOnInterceptToutchEventListener(new OnInterceptToutchEventListener() {
-			
-			@Override
-			public void onTouchEvent(MotionEvent e) {
-				parentEvent = e;
-			}
-		});
+		parentLayout.addOnInterceptToutchEventListener(onInterceptToutchEventListener);
 	}
-
-
-
-
-
-
+	
+	public OnInterceptToutchEventListener getOnInterceptToutchEventListener() {
+		return onInterceptToutchEventListener;
+	}
 
 }

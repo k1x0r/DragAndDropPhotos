@@ -1,4 +1,4 @@
-package com.example.draganddropphotos.views;
+package com.k1x.android.draganddropphotos.views;
 
 import android.view.MotionEvent;
 

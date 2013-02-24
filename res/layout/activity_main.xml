@@ -13,24 +13,18 @@
         android:layout_alignParentRight="true"
         android:text="Add Image" />
 
-    <com.example.draganddropphotos.views.MyLayout
+    <com.k1x.android.draganddropphotos.views.DraggableLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@+id/button"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
-
-    <com.example.draganddropphotos.views.ImageDraggableView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/av" />
+        android:layout_alignParentRight="true" 
+        >
 
-    <com.example.draganddropphotos.views.ImageDraggableView
+
+    <com.k1x.android.draganddropphotos.views.ImageDraggableView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,6 +32,6 @@
         android:layout_below="@+id/relativeLayout"
         android:scaleType="fitXY"
         android:src="@drawable/av" />
-    </com.example.draganddropphotos.views.MyLayout>
+    </com.k1x.android.draganddropphotos.views.DraggableLayout>
     
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.draganddropphotos.views;
+package com.k1x.android.draganddropphotos.views;
 
 import java.util.HashSet;
 
@@ -7,11 +7,14 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
-public class MyLayout extends RelativeLayout {
+public class DraggableLayout extends RelativeLayout {
 
 	private HashSet<OnInterceptToutchEventListener> listeners;
-
-	public MyLayout(Context context, AttributeSet attrs) {
+	
+	private ImageDraggableView activeView;
+	private boolean dragging;
+	
+	public DraggableLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		listeners = new HashSet<OnInterceptToutchEventListener>();
 	}
@@ -19,8 +22,10 @@ public class MyLayout extends RelativeLayout {
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		
-		for(OnInterceptToutchEventListener listener: listeners)
-		listener.onTouchEvent(ev);
+
+		for(OnInterceptToutchEventListener listener: listeners) {
+		listener.onTouchEvent(ev); 
+		}
 		return super.onInterceptTouchEvent(ev);
 	}
 	
@@ -37,4 +42,21 @@ public class MyLayout extends RelativeLayout {
 			OnInterceptToutchEventListener onInterceptToutchEventListener) {
 		return listeners.remove(onInterceptToutchEventListener);
 	}
+
+	public ImageDraggableView getActiveView() {
+		return activeView;
+	}
+
+	public void setActiveView(ImageDraggableView activeView) {
+		this.activeView = activeView;
+	}
+
+	public boolean isDragging() {
+		return dragging;
+	}
+
+	public void setDragging(boolean dragging) {
+		this.dragging = dragging;
+	}
+
 }
