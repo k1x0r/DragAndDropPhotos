@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
 	private Button button;
 	private String selectedImagePath;
 	private DisplayMetrics displaymetrics;
+	private Button saveButton;
 
 
     private static final int SELECT_PICTURE = 1;
@@ -58,6 +59,17 @@ public class MainActivity extends Activity {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,
                         "Select Picture"), SELECT_PICTURE);				
+			}
+		});
+        
+        saveButton = (Button) findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Bitmap outBitmap = draggableLayout.drawOutBitmap();
+				
+				
 			}
 		});
 	}
@@ -136,7 +148,6 @@ public class MainActivity extends Activity {
     
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }

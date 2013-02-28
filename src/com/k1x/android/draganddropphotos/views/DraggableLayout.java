@@ -3,6 +3,7 @@ package com.k1x.android.draganddropphotos.views;
 import java.util.HashSet;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
@@ -57,6 +58,11 @@ public class DraggableLayout extends RelativeLayout {
 
 	public void setDragging(boolean dragging) {
 		this.dragging = dragging;
+	}
+
+	public Bitmap drawOutBitmap() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

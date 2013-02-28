@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/button1"
         android:text="Add Image" />
 
     <com.k1x.android.draganddropphotos.views.DraggableLayout
@@ -33,5 +33,13 @@
         android:scaleType="fitXY"
         android:src="@drawable/av" />
     </com.k1x.android.draganddropphotos.views.DraggableLayout>
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Save Image" />
     
 </RelativeLayout>

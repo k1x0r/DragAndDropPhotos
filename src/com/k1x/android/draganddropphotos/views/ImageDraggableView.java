@@ -49,7 +49,8 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 	
 	@Override
 	public boolean onLongClick(View arg0) {
-		System.out.println("Long click happened! ");
+		parentLayout.bringChildToFront(this);
+		parentLayout.invalidate();
 		return false;
 	}
 
