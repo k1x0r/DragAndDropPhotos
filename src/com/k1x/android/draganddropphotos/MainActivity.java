@@ -1,5 +1,9 @@
 package com.k1x.android.draganddropphotos;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 import com.k1x.android.draganddropphotos.R;
@@ -8,6 +12,7 @@ import com.k1x.android.draganddropphotos.views.DraggableLayout;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.CursorLoader;
@@ -68,12 +73,29 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				Bitmap outBitmap = draggableLayout.drawOutBitmap();
-				
-				
+				saveBitmap(outBitmap);
 			}
 		});
 	}
 
+    private void saveBitmap(Bitmap bitmap) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 75, bytes);
+		
+		String filePath = Environment.getExternalStorageDirectory()
+				+ File.separator + "test.jpg";
+		System.out.println(filePath);
+		File f = new File(filePath);
+		try {
+			f.createNewFile();
+			FileOutputStream fo = new FileOutputStream(f);
+			fo.write(bytes.toByteArray());
+			fo.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
     private void addImageView(String path) {
     	Bitmap bitmap = getDecodedBitmap(path);
        	       	

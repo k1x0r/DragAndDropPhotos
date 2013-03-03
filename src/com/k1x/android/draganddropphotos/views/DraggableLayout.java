@@ -3,7 +3,12 @@ package com.k1x.android.draganddropphotos.views;
 import java.util.HashSet;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
@@ -61,8 +66,12 @@ public class DraggableLayout extends RelativeLayout {
 	}
 
 	public Bitmap drawOutBitmap() {
-		// TODO Auto-generated method stub
-		return null;
+		Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+		Bitmap outBitmap = Bitmap.createBitmap(1000, 1000, conf);
+		Canvas canvas = new Canvas(outBitmap);
+
+		draw(canvas);
+		return outBitmap;
 	}
 
 }
