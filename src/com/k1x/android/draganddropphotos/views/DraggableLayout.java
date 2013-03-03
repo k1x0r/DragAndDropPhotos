@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 public class DraggableLayout extends RelativeLayout {
@@ -65,12 +66,27 @@ public class DraggableLayout extends RelativeLayout {
 		this.dragging = dragging;
 	}
 
-	public Bitmap drawOutBitmap() {
+	public Bitmap drawOutBitmap(float scaleFactor) {
 		Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-		Bitmap outBitmap = Bitmap.createBitmap(1000, 1000, conf);
+		Bitmap outBitmap = Bitmap.createBitmap((int)(getWidth() * scaleFactor), (int)(getHeight() * scaleFactor), conf);
 		Canvas canvas = new Canvas(outBitmap);
-
+		
+		for(int i = 0; i<getChildCount(); i++ ) {
+			ImageDraggableView iView = (ImageDraggableView)getChildAt(i);
+			iView.scaleView(scaleFactor);
+		}
+		
 		draw(canvas);
+		
+		for(int i = 0; i<getChildCount(); i++ ) {
+			ImageDraggableView iView = (ImageDraggableView)getChildAt(i);
+			iView.restoreView();
+		}
+		
+//		ImageDraggableView view = (ImageDraggableView) getChildAt(0);
+//		view.draw(canvas);
+		
+		
 		return outBitmap;
 	}
 

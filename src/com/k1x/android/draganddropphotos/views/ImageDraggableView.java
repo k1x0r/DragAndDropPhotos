@@ -14,7 +14,6 @@ import android.view.View.OnLongClickListener;
 
 public class ImageDraggableView extends ImageView implements OnRotationGestureListener, OnLongClickListener {
 
-	private float mScaleFactor = 1.f;
 
 	private ScaleGestureDetector mScaleDetector;
 	private RotationGestureDetector rotationDetector;
@@ -23,12 +22,20 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 	private DraggableLayout parentLayout;
 	private MotionEvent parentEvent;
 
+	private float mScaleFactor = 1.f;
 	private float imgX;
 	private float imgY;
+	private float iX;
+	private float iY;
+	private float origScaleFactor;
+	private float origImgX;
+	private float origImgY;	
 	private float dx;
 	private float dy;
 	private int pointerCount;
 	private int prevCount;
+	
+
 	
 	private OnInterceptToutchEventListener onInterceptToutchEventListener = new OnInterceptToutchEventListener() {
 		
@@ -96,8 +103,10 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		case MotionEvent.ACTION_MOVE:
 				float x = event.getX();
 				float y = event.getY();
-				setX(imgX + x - getSizedX(dx));
-				setY(imgY + y - getSizedY(dy));
+				iX = imgX + x - getSizedX(dx);
+				iY = imgY + y - getSizedY(dy);
+				setX(iX);
+				setY(iY);
 				break;
 		case MotionEvent.ACTION_UP:
 			imgX = getSizedX(getX());
@@ -138,7 +147,28 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		}
 	}
 
-
+	public void scaleView(float scaleFactor) {
+		origImgX = iX;
+		origImgY = iY;
+		origScaleFactor = mScaleFactor;
+		
+		setX(iX * scaleFactor);
+		setY(iY * scaleFactor);
+		setScaleX(mScaleFactor * scaleFactor);
+		setScaleY(mScaleFactor * scaleFactor);
+		
+	}
+	
+	public void restoreView() {
+		iX = origImgX;
+		iY = origImgY;
+		mScaleFactor = origScaleFactor;
+		
+		setX(iX);
+		setY(iY);
+		setScaleX(mScaleFactor);
+		setScaleY(mScaleFactor);
+	}
 
 	@Override
 	public boolean OnRotation(RotationGestureDetector rotationDetector) {

@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
 
-	private static final float TARGET_SIZE = 400;
+	private static final float TARGET_SIZE = 700;
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				Bitmap outBitmap = draggableLayout.drawOutBitmap();
+				Bitmap outBitmap = draggableLayout.drawOutBitmap(1.55f);
 				saveBitmap(outBitmap);
 			}
 		});
