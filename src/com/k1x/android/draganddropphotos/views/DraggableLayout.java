@@ -19,6 +19,9 @@ import android.widget.RelativeLayout;
 
 public class DraggableLayout extends RelativeLayout {
 
+	
+	private static final int OUT_IMAGE_SIZE = 1200;
+
 	private HashSet<OnInterceptToutchEventListener> listeners;
 	
 	private ImageDraggableView activeView;
@@ -71,27 +74,30 @@ public class DraggableLayout extends RelativeLayout {
 
 	public Bitmap drawOutBitmap(float scaleFactor) {
 		Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-		Bitmap outBitmap = Bitmap.createBitmap((int)(getWidth() * scaleFactor), (int)(getHeight() * scaleFactor), conf);
+		int targetWidth = (int)(getWidth() * scaleFactor);
+		int targetHeight =  (int)(getHeight() * scaleFactor);
+		Bitmap outBitmap = Bitmap.createBitmap(targetWidth, targetHeight, conf);
 		Canvas canvas = new Canvas(outBitmap);
 		Paint paint = new Paint();
-		
-		for(int i = 0; i<getChildCount(); i++ ) {
-			ImageDraggableView iView = (ImageDraggableView)getChildAt(i);
-			if(iView.getImagePath()!=null) {
-				Bitmap imageBitmap = AppBitmapUtil.getDecodedBitmap
-						(iView.getImagePath(), 1024, 1024);
-		/*		Matrix rotateMatrix = new Matrix();
-				rotateMatrix.setRotate(-iView.getAngle());
-				rotateMatrix.postTranslate(iView.getiX(), iView.getiY());
-				float scaleBitmapFactor = (iView.getImageMatrix() / 1024) * iView.getmScaleFactor();
-				System.out.println("scaleFactor " + scaleBitmapFactor);
+		paint.setAntiAlias(true);
+		paint.setFilterBitmap(true);
+		canvas.drawColor(0xFFFFFF);
+
+		for (int i = 0; i < getChildCount(); i++) {
+			ImageDraggableView iView = (ImageDraggableView) getChildAt(i);
+			if (iView.getImagePath() != null) {
+				Bitmap imageBitmap = AppBitmapUtil.getDecodedBitmap(
+						iView.getImagePath(), OUT_IMAGE_SIZE, OUT_IMAGE_SIZE);
+				Matrix rotateMatrix = new Matrix();
+				rotateMatrix.postRotate(-iView.getAngle());
+				float scaleBitmapFactor = ((float)iView.getWidth() / imageBitmap.getWidth()) * iView.getmScaleFactor() * scaleFactor;
 				rotateMatrix.postScale(scaleBitmapFactor, scaleBitmapFactor);
-				*/
-				canvas.drawBitmap(imageBitmap, iView.getMatrix(), paint);
+
+				canvas.drawBitmap(imageBitmap, rotateMatrix, paint);
+
 			}
 		}
 
-		
 		return outBitmap;
 	}
 

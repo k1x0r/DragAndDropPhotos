@@ -58,7 +58,7 @@ public boolean onTouchEvent(MotionEvent event){
                 }
 
                 if (mListener != null) {
-                    mListener.OnRotation(this);
+                    mListener.onRotation(this);
                 }
                 fX = nfX;
                 fY = nfY;
@@ -125,6 +125,6 @@ public boolean isInProgress() {
 
 
 public static interface OnRotationGestureListener {
-    public boolean OnRotation(RotationGestureDetector rotationDetector);
+    public boolean onRotation(RotationGestureDetector rotationDetector);
 }
 }

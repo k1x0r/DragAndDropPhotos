@@ -5,6 +5,8 @@ import com.k1x.android.draganddropphotos.views.DraggableLayout.OnInterceptToutch
 import com.k1x.android.draganddropphotos.views.RotationGestureDetector.OnRotationGestureListener;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -70,6 +72,14 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		}
 		
 		return super.onTouchEvent(e);
+	}
+	
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+		Paint paint = new Paint();
+		
 	}
 	
 	private boolean checkActiveView(MotionEvent e) {
@@ -171,7 +181,7 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 	}
 
 	@Override
-	public boolean OnRotation(RotationGestureDetector rotationDetector) {
+	public boolean onRotation(RotationGestureDetector rotationDetector) {
 		angle += rotationDetector.getAngle();
 		
 		setRotation(-angle);
