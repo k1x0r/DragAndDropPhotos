@@ -21,7 +21,7 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 
 	private DraggableLayout parentLayout;
 	private MotionEvent parentEvent;
-
+	private String imagePath;
 	private float mScaleFactor = 1.f;
 	private float imgX;
 	private float imgY;
@@ -191,4 +191,28 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		return onInterceptToutchEventListener;
 	}
 
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+	
+
+	public float getAngle() {
+		return angle;
+	}
+
+	public float getiX() {
+		return iX;
+	}
+
+	public float getiY() {
+		return iY;
+	}
+
+	public float getmScaleFactor() {
+		return mScaleFactor;
+	}
 }

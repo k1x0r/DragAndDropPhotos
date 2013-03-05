@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import com.k1x.android.draganddropphotos.R;
+import com.k1x.android.draganddropphotos.bitmapUtil.AppBitmapUtil;
 import com.k1x.android.draganddropphotos.views.ImageDraggableView;
 import com.k1x.android.draganddropphotos.views.DraggableLayout;
 
@@ -80,7 +81,7 @@ public class MainActivity extends Activity {
 
     private void saveBitmap(Bitmap bitmap) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 75, bytes);
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 		
 		String filePath = Environment.getExternalStorageDirectory()
 				+ File.separator + "test.jpg";
@@ -97,7 +98,13 @@ public class MainActivity extends Activity {
     }
     
     private void addImageView(String path) {
-    	Bitmap bitmap = getDecodedBitmap(path);
+        displaymetrics = new DisplayMetrics();
+
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        float display_height = displaymetrics.heightPixels;
+        float display_width = displaymetrics.widthPixels;
+
+    	Bitmap bitmap = AppBitmapUtil.getDecodedBitmap(path, display_width, display_height);
        	       	
     	float bitmapSize = bitmap.getWidth() > bitmap.getHeight() ? bitmap.getWidth() : bitmap.getHeight();
     	System.out.println("Bitmap Size: " + bitmapSize);
@@ -106,6 +113,7 @@ public class MainActivity extends Activity {
 
         ImageDraggableView imageTView = new ImageDraggableView(this, null);
         imageTView.setImageBitmap(bitmap);
+        imageTView.setImagePath(path);
         
         draggableLayout.addView(imageTView);
         imageTView.setParentLayout(draggableLayout);
@@ -117,35 +125,7 @@ public class MainActivity extends Activity {
         
     }
     
-    private Bitmap getDecodedBitmap(String path) {
-        displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        float display_height = displaymetrics.heightPixels;
-        float display_width = displaymetrics.widthPixels;
-    	float scale_param = 0;
 
-    	Options decode_options = new Options();
-    	decode_options.inJustDecodeBounds = true;
-    	BitmapFactory.decodeFile(path,decode_options);  //This will just fill the output parameters
-		if(decode_options.outWidth > display_width
-    	        || decode_options.outHeight > display_height)
-    	{
-    	    float scale_width,scale_height;
-
-    	    scale_width = ((float)decode_options.outWidth) / display_width;
-    	    scale_param = scale_width;
-    	    scale_height = ((float)decode_options.outHeight) / display_height;
-
-    	    if(scale_param < scale_height) {
-    	        scale_param = scale_height;
-    	    }
-    	}
-
-    	decode_options.inJustDecodeBounds = false;
-    	decode_options.inSampleSize  = (int)(scale_param + 1);
-    	decode_options.inPreferredConfig =  Bitmap.Config.ARGB_8888;
-    	return BitmapFactory.decodeFile(path,decode_options);
-    }
     
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
