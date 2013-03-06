@@ -5,16 +5,14 @@ import java.util.HashSet;
 import com.k1x.android.draganddropphotos.bitmapUtil.AppBitmapUtil;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 public class DraggableLayout extends RelativeLayout {
@@ -26,6 +24,10 @@ public class DraggableLayout extends RelativeLayout {
 	
 	private ImageDraggableView activeView;
 	private boolean dragging;
+
+	private int layoutX;
+
+	private int layoutY;
 	
 	public DraggableLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -81,24 +83,56 @@ public class DraggableLayout extends RelativeLayout {
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setFilterBitmap(true);
-		canvas.drawColor(0xFFFFFF);
+		
+		getXY();
+		
+		canvas.drawColor(Color.WHITE);
 
 		for (int i = 0; i < getChildCount(); i++) {
 			ImageDraggableView iView = (ImageDraggableView) getChildAt(i);
 			if (iView.getImagePath() != null) {
 				Bitmap imageBitmap = AppBitmapUtil.getDecodedBitmap(
 						iView.getImagePath(), OUT_IMAGE_SIZE, OUT_IMAGE_SIZE);
-				Matrix rotateMatrix = new Matrix();
-				rotateMatrix.postRotate(-iView.getAngle());
+				
+				Matrix transformMatrix = new Matrix();
 				float scaleBitmapFactor = ((float)iView.getWidth() / imageBitmap.getWidth()) * iView.getmScaleFactor() * scaleFactor;
-				rotateMatrix.postScale(scaleBitmapFactor, scaleBitmapFactor);
+				transformMatrix.postScale(scaleBitmapFactor, scaleBitmapFactor);
 
-				canvas.drawBitmap(imageBitmap, rotateMatrix, paint);
+				float pivotX =  (iView.getWidth() * scaleBitmapFactor) /2 ;
+				float pivotY =  (iView.getHeight() * scaleBitmapFactor) /2 ;
+				transformMatrix.postRotate(-iView.getAngle(), pivotX, pivotY);
+
+				
+				Rect R = new Rect();
+				iView.getGlobalVisibleRect(R);
+				float viewX = R.centerX() - R.width() / 2;
+				float viewY = R.centerY() - R.height() / 2 - layoutY;
+				System.out.println("viewX = " + viewX + " viewY = " + viewY);
+				transformMatrix.postTranslate(viewX, viewY);
+				
+				paint.setColor(Color.RED);
+				canvas.drawRect(viewX, viewY, viewX + imageBitmap.getWidth() * scaleBitmapFactor, viewY + imageBitmap.getHeight() * scaleBitmapFactor, paint);
+				
+				canvas.drawBitmap(imageBitmap, transformMatrix, paint);
+				
+				canvas.drawRect(
+						viewX + imageBitmap.getWidth() * scaleBitmapFactor / 2 - 1, 
+						viewY + imageBitmap.getHeight() * scaleBitmapFactor / 2 - 1, 
+						viewX + imageBitmap.getWidth() * scaleBitmapFactor / 2 + 1, 
+						viewY + imageBitmap.getHeight() * scaleBitmapFactor / 2 + 1, 
+						paint);
 
 			}
 		}
 
 		return outBitmap;
+	}
+
+	private void getXY() {
+		Rect R = new Rect();
+		getGlobalVisibleRect(R);
+		layoutX = R.left;
+		layoutY = R.top;
 	}
 
 }

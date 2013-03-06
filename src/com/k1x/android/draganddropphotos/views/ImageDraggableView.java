@@ -115,6 +115,7 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 				float y = event.getY();
 				iX = imgX + x - getSizedX(dx);
 				iY = imgY + y - getSizedY(dy);
+				System.out.println("iX = " + iX + " iY = "+ iY);
 				setX(iX);
 				setY(iY);
 				break;
