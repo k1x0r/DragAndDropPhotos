@@ -6,6 +6,7 @@ import com.k1x.android.draganddropphotos.views.RotationGestureDetector.OnRotatio
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -65,6 +66,7 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
+		printMatrix();
 		if (checkActiveView(parentEvent)) {
 			mScaleDetector.onTouchEvent(parentEvent);
 			rotationDetector.onTouchEvent(parentEvent);
@@ -74,14 +76,19 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		return super.onTouchEvent(e);
 	}
 	
-
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		Paint paint = new Paint();
+	private void printMatrix() {
+		Matrix matrix = getMatrix();
+		float[] values = new float[] {1,2,3,4,5,6,7,8,9};
+		System.out.println("---------------NEW MATRIX");
+		matrix.getValues(values);
+		for(int i = 0; i< 9; i++) {
+			System.out.print(values[i] + ",");
+		}
+		System.out.println();
+		System.out.println("scaleFactor = " + mScaleFactor + " x = " + getX()  + " y = "+ getY());
+		
 		
 	}
-	
 	private boolean checkActiveView(MotionEvent e) {
 		if (e.getAction() == MotionEvent.ACTION_DOWN && !parentLayout.isDragging()) {
 			parentLayout.setActiveView(this);
@@ -115,7 +122,6 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 				float y = event.getY();
 				iX = imgX + x - getSizedX(dx);
 				iY = imgY + y - getSizedY(dy);
-				System.out.println("iX = " + iX + " iY = "+ iY);
 				setX(iX);
 				setY(iY);
 				break;

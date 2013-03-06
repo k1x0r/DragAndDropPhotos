@@ -6,30 +6,41 @@ import android.graphics.BitmapFactory.Options;
 
 public class AppBitmapUtil {
 
-    public static Bitmap getDecodedBitmap(String path, float display_width, float display_height) {
-    	float scale_param = 0;
-
+    public static Bitmap getDecodedBitmap(String path, float target_width, float target_height) {
     	Options decode_options = new Options();
     	decode_options.inJustDecodeBounds = true;
     	BitmapFactory.decodeFile(path,decode_options);  //This will just fill the output parameters
-		if(decode_options.outWidth > display_width
-    	        || decode_options.outHeight > display_height)
-    	{
-    	    float scale_width,scale_height;
+    	int inSampleSize = calculateInSampleSize(decode_options, target_width, target_height);
+    	
+    	Options outOptions = new Options();
+    	outOptions.inJustDecodeBounds = false;
+    	outOptions.inSampleSize = inSampleSize;
+    	outOptions.inPreferredConfig =  Bitmap.Config.ARGB_8888;
 
-    	    scale_width = ((float)decode_options.outWidth) / display_width;
-    	    scale_param = scale_width;
-    	    scale_height = ((float)decode_options.outHeight) / display_height;
-
-    	    if(scale_param < scale_height) {
-    	        scale_param = scale_height;
-    	    }
-    	}
-
-    	decode_options.inJustDecodeBounds = false;
-    	decode_options.inSampleSize  = (int)(scale_param + 1);
-    	decode_options.inPreferredConfig =  Bitmap.Config.ARGB_8888;
-    	return BitmapFactory.decodeFile(path,decode_options);
+    	Bitmap decodedBitmap = BitmapFactory.decodeFile(path,outOptions);
+    	Bitmap outBitmap = Bitmap.createScaledBitmap(decodedBitmap, 
+    			(int)((float)decodedBitmap.getWidth() / inSampleSize),
+    			(int)((float)decodedBitmap.getHeight() / inSampleSize), true);
+    	System.out.println("Decoded Bitmap: Width "  + outBitmap.getWidth() + " Height = " + outBitmap.getHeight() + " inSampleSize = " + inSampleSize);
+    	
+    	return outBitmap;
     }
-	
+
+	public static int calculateInSampleSize(Options options, float reqWidth, float reqHeight) {
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int heightRatio = Math.round((float) height
+					/ (float) reqHeight);
+			final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+			inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+		}
+
+		return inSampleSize;
+	}
+    
 }

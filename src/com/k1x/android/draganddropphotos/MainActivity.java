@@ -20,8 +20,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.View;
@@ -40,7 +38,7 @@ public class MainActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
 
-	private static final float TARGET_SIZE = 700;
+	private static final float TARGET_SIZE = 480;
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +71,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				Bitmap outBitmap = draggableLayout.drawOutBitmap(1f);
+				Bitmap outBitmap = draggableLayout.drawOutBitmap(2f);
 				saveBitmap(outBitmap);
+				outBitmap.recycle();
 			}
 		});
 	}
@@ -125,9 +124,7 @@ public class MainActivity extends Activity {
         
     }
     
-
-    
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
