@@ -20,7 +20,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,13 +31,12 @@ public class MainActivity extends Activity {
 	private DraggableLayout draggableLayout;
 	private Button button;
 	private String selectedImagePath;
-	private DisplayMetrics displaymetrics;
 	private Button saveButton;
 
 
     private static final int SELECT_PICTURE = 1;
 
-	private static final float TARGET_SIZE = 480;
+	private static final float TARGET_SIZE = 800;
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +95,13 @@ public class MainActivity extends Activity {
     }
     
     private void addImageView(String path) {
-        displaymetrics = new DisplayMetrics();
+    /*    displaymetrics = new DisplayMetrics();
 
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         float display_height = displaymetrics.heightPixels;
         float display_width = displaymetrics.widthPixels;
-
-    	Bitmap bitmap = AppBitmapUtil.getDecodedBitmap(path, display_width, display_height);
+     */
+    	Bitmap bitmap = AppBitmapUtil.getDecodedBitmap(path, TARGET_SIZE, TARGET_SIZE);
        	       	
     	float bitmapSize = bitmap.getWidth() > bitmap.getHeight() ? bitmap.getWidth() : bitmap.getHeight();
     	System.out.println("Bitmap Size: " + bitmapSize);

@@ -16,9 +16,10 @@ public class AppBitmapUtil {
     	outOptions.inJustDecodeBounds = false;
     	outOptions.inSampleSize = inSampleSize;
     	outOptions.inPreferredConfig =  Bitmap.Config.ARGB_8888;
+    	outOptions.inScaled = false;
 
     	Bitmap decodedBitmap = BitmapFactory.decodeFile(path,outOptions);
-    	Bitmap outBitmap = Bitmap.createScaledBitmap(decodedBitmap, 
+    	Bitmap outBitmap = Bitmap.createScaledBitmap(decodedBitmap,// (int)target_width, (int)target_height, true);
     			(int)((float)decodedBitmap.getWidth() / inSampleSize),
     			(int)((float)decodedBitmap.getHeight() / inSampleSize), true);
     	System.out.println("Decoded Bitmap: Width "  + outBitmap.getWidth() + " Height = " + outBitmap.getHeight() + " inSampleSize = " + inSampleSize);
