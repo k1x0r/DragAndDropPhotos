@@ -5,8 +5,6 @@ import com.k1x.android.draganddropphotos.views.DraggableLayout.OnInterceptToutch
 import com.k1x.android.draganddropphotos.views.RotationGestureDetector.OnRotationGestureListener;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -46,8 +44,7 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 			parentEvent = e;
 		}
 	};
-	private int bitmapWidth;
-	private int bitmapHeight;
+
 	
 
 	public ImageDraggableView(Context context, AttributeSet attrs) {
@@ -67,7 +64,6 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-//		printMatrix();
 		if (checkActiveView(parentEvent)) {
 			mScaleDetector.onTouchEvent(parentEvent);
 			rotationDetector.onTouchEvent(parentEvent);
@@ -77,19 +73,6 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		return super.onTouchEvent(e);
 	}
 	
-	private void printMatrix() {
-		Matrix matrix = getMatrix();
-		float[] values = new float[] {1,2,3,4,5,6,7,8,9};
-		System.out.println("---------------NEW MATRIX");
-		matrix.getValues(values);
-		for(int i = 0; i< 9; i++) {
-			System.out.print(values[i] + ",");
-		}
-		System.out.println();
-		System.out.println("scaleFactor = " + mScaleFactor + " x = " + getX()  + " y = "+ getY());
-		
-		
-	}
 	private boolean checkActiveView(MotionEvent e) {
 		if (e.getAction() == MotionEvent.ACTION_DOWN && !parentLayout.isDragging()) {
 			parentLayout.setActiveView(this);
@@ -136,13 +119,6 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		
 	}
 	
-	@Override
-	public void setImageBitmap(Bitmap bm) {
-		super.setImageBitmap(bm);
-		bitmapWidth = bm.getWidth();
-		bitmapHeight = bm.getHeight();
-	}
-
 	private float getSizedX(float x) {
 		
 		return x + (mScaleFactor *getWidth() -  getWidth()) / 2;
@@ -241,11 +217,6 @@ public class ImageDraggableView extends ImageView implements OnRotationGestureLi
 		return mScaleFactor;
 	}
 	
-	public int getBitmapWidth() {
-		return bitmapWidth;
-	}
 
-	public int getBitmapHeight() {
-		return bitmapHeight;
-	}
+
 }

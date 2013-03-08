@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				Bitmap outBitmap = draggableLayout.drawOutBitmap(2f);
+				Bitmap outBitmap = draggableLayout.drawOutBitmap(2.25f);
 				saveBitmap(outBitmap);
 				outBitmap.recycle();
 			}

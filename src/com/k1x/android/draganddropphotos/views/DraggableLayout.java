@@ -6,11 +6,11 @@ import com.k1x.android.draganddropphotos.bitmapUtil.AppBitmapUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
@@ -80,67 +80,31 @@ public class DraggableLayout extends RelativeLayout {
 		paint.setAntiAlias(true);
 		paint.setFilterBitmap(true);
 		
-		
 		canvas.drawColor(Color.WHITE);
 
 		for (int i = 0; i < getChildCount(); i++) {
 			ImageDraggableView iView = (ImageDraggableView) getChildAt(i);
 			if (iView.getImagePath() != null) {
-				Bitmap imageBitmap = // BitmapFactory.decodeFile(iView.getImagePath());
-						AppBitmapUtil.getDecodedBitmap(iView.getImagePath(), OUT_IMAGE_SIZE, OUT_IMAGE_SIZE);
+				Bitmap imageBitmap = AppBitmapUtil.getDecodedBitmap(iView.getImagePath(), OUT_IMAGE_SIZE, OUT_IMAGE_SIZE);
 				Matrix transformMatrix = new Matrix(iView.getMatrix());
-			//	transformMatrix.preConcat(iView.getImageMatrix());
+				transformMatrix.preConcat(iView.getImageMatrix());
+				transformMatrix.postScale(scaleFactor, scaleFactor);
+				
 				float[] values = new float[9];
 				transformMatrix.getValues(values);
-				float scaleFactorQ = ((float)iView.getMeasuredWidth() / (float)imageBitmap.getWidth()) * scaleFactor;
-				float scaleFactorH = ((float)iView.getMeasuredHeight() / (float)imageBitmap.getHeight()) * scaleFactor;
-			//	scaleFactorQ = scaleFactorQ > scaleFactorH ? scaleFactorQ : scaleFactorH ;
-				System.out.println("iView.getBitmapWidth() = " + iView.getBitmapWidth() + "iView.getBitmapHeight() = " + iView.getBitmapHeight());
-				System.out.println("iView.getMeasuredWidth() = " + iView.getMeasuredWidth() + " iView.getMeasuredHeight() = " + iView.getMeasuredHeight());
-				System.out.println("imageBitmap.getWidth() = " + imageBitmap.getWidth() + " imageBitmap.getHeight() = " + imageBitmap.getHeight());
-				System.out.println("scaleFactorQ = " + scaleFactorQ + " scaleFactorH = " + scaleFactorH);
-			//	transformMatrix.p
+
+				float scaleFactorQ = ((float)((BitmapDrawable)iView.getDrawable()).getBitmap().getWidth() / (float)imageBitmap.getWidth());
 				values[0] *= scaleFactorQ;
 				values[4] *= scaleFactorQ;
-			//	values[1] *= scaleFactor;
-			//	values[3] *= scaleFactor;
-				
-				values[2] *= scaleFactor;
-				values[5] *= scaleFactor;
-				
-			/*	values[6] *= scaleFactorQ; 
-				values[7] *= scaleFactorQ;
-				values[8] *= scaleFactorQ;
-			*/	
+				values[1] *= scaleFactorQ;
+				values[3] *= scaleFactorQ;
 				transformMatrix.setValues(values);
-				
 				canvas.drawBitmap(imageBitmap, transformMatrix, paint);	
 				imageBitmap.recycle();
-				
 			}
 		}
 
 		return outBitmap;
 	}
 
-
-
-	/*			
-	transformMatrix.postScale(scaleBitmapFactor, scaleBitmapFactor);
-
-	float pivotX =  (iView.getWidth() * scaleBitmapFactor) /2 ;
-	float pivotY =  (iView.getHeight() * scaleBitmapFactor) /2 ;
-	transformMatrix.postRotate(-iView.getAngle(), pivotX, pivotY);
-
-	
-	Rect R = new Rect();
-	iView.getGlobalVisibleRect(R);
-	float viewX = R.centerX() - R.width() / 2;
-	float viewY = R.centerY() - R.height() / 2 - layoutY;
-	System.out.println("viewX = " + viewX + " viewY = " + viewY);
-	transformMatrix.postTranslate(viewX, viewY);
-	
-	paint.setColor(Color.RED);
-	canvas.drawRect(viewX, viewY, viewX + imageBitmap.getWidth() * scaleBitmapFactor, viewY + imageBitmap.getHeight() * scaleBitmapFactor, paint);
-*/		
 }
