@@ -2,9 +2,13 @@ package com.k1x.android.draganddropphotos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.Random;
+import java.io.RandomAccessFile;
 
 import com.k1x.android.draganddropphotos.R;
 import com.k1x.android.draganddropphotos.bitmapUtil.AppBitmapUtil;
@@ -77,6 +81,8 @@ public class MainActivity extends Activity {
 	}
 
     private void saveBitmap(Bitmap bitmap) {
+
+
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 		
@@ -85,10 +91,14 @@ public class MainActivity extends Activity {
 		System.out.println(filePath);
 		File f = new File(filePath);
 		try {
+	    	File outFile = new File(filePath);
 			f.createNewFile();
-			FileOutputStream fo = new FileOutputStream(f);
-			fo.write(bytes.toByteArray());
-			fo.close();
+	        RandomAccessFile randomAccessFile = new RandomAccessFile(outFile, "rw");
+	        FileChannel  wChannel = randomAccessFile.getChannel();
+	        OutputStream os = Channels.newOutputStream(wChannel);
+			os.write(bytes.toByteArray());
+			wChannel.close();
+			randomAccessFile.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
