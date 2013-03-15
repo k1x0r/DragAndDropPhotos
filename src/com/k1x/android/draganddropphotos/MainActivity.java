@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
-import java.nio.channels.WritableByteChannel;
 import java.util.Random;
 import java.io.RandomAccessFile;
 
@@ -31,7 +30,6 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
-    private ImageDraggableView imageView;
 	private DraggableLayout draggableLayout;
 	private Button button;
 	private String selectedImagePath;
@@ -52,9 +50,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 		
         draggableLayout = (DraggableLayout) findViewById(R.id.relativeLayout);
-        imageView = (ImageDraggableView) findViewById(R.id.imageView);
-        imageView.setParentLayout(draggableLayout);
-                       
+                      
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new OnClickListener() {
 			
